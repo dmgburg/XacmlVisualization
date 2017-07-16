@@ -29,7 +29,7 @@ d3.json("/", function (treeData) {
 
     var separation = 1.1
     var nodeHorizontalMargin = 20;
-    var nodeVerticalMargin = nodeWidth * separation;
+    var nodeVerticalMargin = nodeWidth * (separation - 1);
 
     // ************** Generate the tree diagram	 *****************
     var margin = {top: 20, right: 40, bottom: 20, left: 40},
