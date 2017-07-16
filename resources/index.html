@@ -20,11 +20,11 @@ d3.json("/", function (treeData) {
 
     var hierarchy = d3.hierarchy(treeData)
 
-    var treeVerticalSize = hierarchy.leaves().length;
-    var treeHorizontalSize = hierarchy.height + 1;
+    var treeVerticalSize = hierarchy.height + 1;
+    var treeHorizontalSize = hierarchy.leaves().length;
 
-    var nodeHorizontalMargin = 60;
-    var nodeVerticalMargin = 20;
+    var nodeHorizontalMargin = 20;
+    var nodeVerticalMargin = 60;
 
     var i = 0;
     var nodeHeight = 200;
@@ -36,13 +36,13 @@ d3.json("/", function (treeData) {
     	height = (nodeHeight + nodeVerticalMargin) * treeVerticalSize;
 
     var tree = d3.layout.tree()
-    	.nodeSize([nodeHeight, nodeWidth])
+    	.nodeSize([nodeWidth, nodeHeight])
     	.separation((a,b) =>  a.parent == b.parent ? 1.1 : 1.2);
 
     var diagonal = d3.svg.diagonal()
-        .source(function(d) { return {"x":d.source.x+ nodeHeight/2, "y":d.source.y + nodeWidth}; })
-        .target(function(d) { return {"x":d.target.x+ nodeHeight/2, "y":d.target.y}; })
-    	.projection(function(d) { return [d.y, d.x]; });
+        .source(function(d) { return {"x":d.source.x + nodeWidth/2, "y":d.source.y + nodeHeight}; })
+        .target(function(d) { return {"x":d.target.x + nodeWidth/2, "y":d.target.y}; })
+    	.projection(function(d) { return [d.x, d.y]; });
 
     var svg = d3.select("body").append("svg")
     	.attr("width", width + margin.right + margin.left)
@@ -52,28 +52,27 @@ d3.json("/", function (treeData) {
 
     // Compute the new tree layout.
     var nodes = tree.nodes(treeData).reverse(),
-     links = tree.links(nodes);
+    links = tree.links(nodes);
 
     // Normalize for fixed-depth.
     nodes.forEach(function(d) {
-        d.x = d.x + height/2 - nodeHeight/2;
-        d.y = d.depth * (nodeWidth + nodeHorizontalMargin);
+        d.x = d.x + width/2 - nodeWidth/2;
+        d.y = d.depth * (nodeHeight + nodeVerticalMargin);
     });
 
     // Declare the nodes…
     var node = svg.selectAll("g.node")
-      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+      .data(nodes, function(d) { return d.idHtml || (d.idHtml = ++i); });
 
     // Enter the nodes.
     var nodeEnter = node.enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) {
-    	  return "translate(" + d.y + "," + d.x + ")"; });
+    	  return "translate(" + d.x + "," + d.y + ")"; });
 
     nodeEnter.append("rect")
       .attr("ry","6")
       .attr("rx","6")
-      <!--.attr("y",-nodeHeight/2)-->
       .attr("height",nodeHeight)
       .attr("width", nodeWidth)
       .style("stroke-width", function(d) {
@@ -90,7 +89,7 @@ d3.json("/", function (treeData) {
          default: return 'grey';
          }
       })
-    	  .style("fill", "none");
+      .style("fill", "none");
 
       nodeEnter.append("text")
     	  .attr("x", function(d) {return "6"})
@@ -102,7 +101,7 @@ d3.json("/", function (treeData) {
 
       // Declare the links…
       var link = svg.selectAll("path.link")
-    	  .data(links, function(d) { return d.target.id; });
+    	  .data(links, function(d) { return d.target.idHtml; });
 
       // Enter the links.
       link.enter().insert("path", "g")
