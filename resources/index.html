@@ -23,12 +23,13 @@ d3.json("/", function (treeData) {
     var treeVerticalSize = hierarchy.height + 1;
     var treeHorizontalSize = hierarchy.leaves().length;
 
-    var nodeHorizontalMargin = 20;
-    var nodeVerticalMargin = 60;
-
     var i = 0;
     var nodeHeight = 200;
     var nodeWidth = 300;
+
+    var separation = 1.1
+    var nodeHorizontalMargin = 20;
+    var nodeVerticalMargin = nodeWidth * separation;
 
     // ************** Generate the tree diagram	 *****************
     var margin = {top: 20, right: 40, bottom: 20, left: 40},
@@ -37,7 +38,7 @@ d3.json("/", function (treeData) {
 
     var tree = d3.layout.tree()
     	.nodeSize([nodeWidth, nodeHeight])
-    	.separation((a,b) =>  a.parent == b.parent ? 1.1 : 1.2);
+    	.separation((a,b) =>  separation);
 
     var diagonal = d3.svg.diagonal()
         .source(function(d) { return {"x":d.source.x + nodeWidth/2, "y":d.source.y + nodeHeight}; })
