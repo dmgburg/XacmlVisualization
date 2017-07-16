@@ -2,7 +2,7 @@
 <PolicySet PolicySetId="GPMS-PolicySet1" Version="1.0" PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17 http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd">
-    <Description>PolicySet for GPMS.</Description>
+    <Description>PolicySet for GPMS. Only "Tenured/tenure-track faculty" or "Non-tenure-track research faculty" can "Add" a "Whole Proposal" Only "Tenured/tenure-track faculty" or "Non-tenure-track research faculty" can "Add" a "Whole Proposal"</Description>
     <Target />
     <!-- NorPolicyNodelicy Rules -->
     <Policy PolicyId="GPMS-Proposal-Rules" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides" Version="1.0">

@@ -3,21 +3,20 @@
 svg {
     background-color: beige;
 }
+
+
 </style>
 <body>
 
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
+<script src="//d3plus.org/js/d3plus.js"></script>
 <script>
 
 var body = d3.select("body");
 var div = body.append("div");
 div.html("Hello, world!");
 d3.json("/", function (treeData) {
-
-   // var myjson = '{"children":[{"children":[],"decision":null,"description":"Teddy bears"},{"children":[],"decision":null,"description":"Star Wars"},{"children":[],"decision":"ALLOW","description":"Disney worlds"}],"decision":"ALLOW","description":"Root"}';
-   // treeData = JSON.parse( myjson )
-
     console.log(treeData)
 
     var hierarchy = d3.hierarchy(treeData)
@@ -41,8 +40,8 @@ d3.json("/", function (treeData) {
     	.size([height, width]);
 
     var diagonal = d3.svg.diagonal()
-        .source(function(d) { return {"x":d.source.x, "y":d.source.y + nodeWidth}; })
-        .target(function(d) { return {"x":d.target.x, "y":d.target.y}; })
+        .source(function(d) { return {"x":d.source.x+ nodeHeight/2, "y":d.source.y + nodeWidth}; })
+        .target(function(d) { return {"x":d.target.x+ nodeHeight/2, "y":d.target.y}; })
     	.projection(function(d) { return [d.y, d.x]; });
 
     var svg = d3.select("body").append("svg")
@@ -71,7 +70,7 @@ d3.json("/", function (treeData) {
     nodeEnter.append("rect")
       .attr("ry","6")
       .attr("rx","6")
-      .attr("y",-nodeHeight/2)
+      <!--.attr("y",-nodeHeight/2)-->
       .attr("height",nodeHeight)
       .attr("width", nodeWidth)
       .style("stroke-width", function(d) {
@@ -92,10 +91,11 @@ d3.json("/", function (treeData) {
 
       nodeEnter.append("text")
     	  .attr("x", function(d) {return "6"})
-    	  .attr("dy", ".35em")
+    	  .attr("dy", "1.3em")
     	  .attr("text-anchor", "start")
+    	  .style("fill-opacity", 1)
     	  .text(function(d) { return d.description; })
-    	  .style("fill-opacity", 1);
+    	  .call(wrap, nodeWidth);
 
       // Declare the links…
       var link = svg.selectAll("path.link")
@@ -121,6 +121,32 @@ d3.json("/", function (treeData) {
       	  .style("fill", "none")
     	  .attr("d", diagonal);
 });
+
+function wrap(text, width) {
+  effectiveWidth = width - 10
+  text.each(function() {
+    var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1, // ems
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", 5).attr("y", y).attr("dy", dy + "em");
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", 5).attr("y", y).attr("dy", "1.4em").text(word);
+      }
+    }
+  });
+}
+
 
 </script>
 </body>
