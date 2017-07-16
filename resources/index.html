@@ -10,7 +10,6 @@ svg {
 
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
-<script src="//d3plus.org/js/d3plus.js"></script>
 <script>
 
 var body = d3.select("body");
@@ -32,12 +31,13 @@ d3.json("/", function (treeData) {
     var nodeWidth = 300;
 
     // ************** Generate the tree diagram	 *****************
-    var margin = {top: 20, right: 120, bottom: 20, left: 120},
+    var margin = {top: 20, right: 40, bottom: 20, left: 40},
     	width = (nodeWidth + nodeHorizontalMargin) * treeHorizontalSize,
-    	height = (nodeHeight + nodeVerticalMargin) * (treeVerticalSize + 2);
+    	height = (nodeHeight + nodeVerticalMargin) * treeVerticalSize;
 
     var tree = d3.layout.tree()
-    	.size([height, width]);
+    	.nodeSize([nodeHeight, nodeWidth])
+    	.separation((a,b) =>  a.parent == b.parent ? 1.1 : 1.2);
 
     var diagonal = d3.svg.diagonal()
         .source(function(d) { return {"x":d.source.x+ nodeHeight/2, "y":d.source.y + nodeWidth}; })
@@ -55,7 +55,10 @@ d3.json("/", function (treeData) {
      links = tree.links(nodes);
 
     // Normalize for fixed-depth.
-    nodes.forEach(function(d) { d.y = d.depth * (nodeWidth + nodeHorizontalMargin); });
+    nodes.forEach(function(d) {
+        d.x = d.x + height/2 - nodeHeight/2;
+        d.y = d.depth * (nodeWidth + nodeHorizontalMargin);
+    });
 
     // Declare the nodes…
     var node = svg.selectAll("g.node")
