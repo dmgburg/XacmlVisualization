@@ -61,7 +61,3 @@ class JsonController {
         return String(encoded, UTF_8)
     }
 }
-
-fun main(args: Array<String>) {
-    SpringApplication.run(JsonController::class.java, *args)
-}
