@@ -2,10 +2,7 @@ package com.dmgburg.visualization
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.web.support.SpringBootServletInitializer
-import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Import
-import org.springframework.context.event.ContextRefreshedEvent
-import javax.servlet.ServletContext
 
 
 @Import(JsonController::class)

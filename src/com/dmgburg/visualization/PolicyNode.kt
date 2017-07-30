@@ -1,18 +1,26 @@
 package com.dmgburg.visualization
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.ArrayList
 
 class PolicyNode {
+    @JsonIgnore
+    var parent: PolicyNode? = null
     var children: MutableList<PolicyNode> = ArrayList()
     var decision: Desicion? = null
     var description: String
     var id: String? = null
 
-    constructor() {
+    constructor(parent: PolicyNode?) {
+        this.parent = parent
         description = ""
     }
 
-    constructor(description: String, decision: Desicion) : this(description) {
+    constructor(parent: PolicyNode?, description: String) {
+        this.description = description
+    }
+
+    constructor(parent: PolicyNode,description: String, decision: Desicion) : this(parent, description) {
         this.decision = decision
     }
 
@@ -21,16 +29,7 @@ class PolicyNode {
         return this
     }
 
-    constructor(description: String) {
-        this.description = description
-    }
-
     override fun toString(): String {
-        return "PolicyNode{" +
-                "children=" + children +
-                ", decision=" + decision +
-                ", description='" + description + '\'' +
-                ", id='" + id + '\'' +
-                '}'
+        return "PolicyNode{id='" + id + '\'' +'}'
     }
 }

@@ -97,7 +97,7 @@ d3.json("/", function (treeData) {
     	  .attr("dy", "1.3em")
     	  .attr("text-anchor", "start")
     	  .style("fill-opacity", 1)
-    	  .text(function(d) { return d.description; })
+    	  .text(function(d) { return d.id; })
     	  .call(wrap, nodeWidth);
 
       // Declare the links…

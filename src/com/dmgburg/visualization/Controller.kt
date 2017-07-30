@@ -1,63 +1,62 @@
 package com.dmgburg.visualization
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.boot.SpringApplication
+import org.joda.time.DateTime
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 
-import java.io.File
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.LinkedHashMap
-
-import java.nio.charset.StandardCharsets.UTF_8
-
 @Controller
+@CrossOrigin(origins = arrayOf("*"))
 @EnableAutoConfiguration
 class JsonController {
 
     @RequestMapping("/")
     @ResponseBody
-    internal fun home(): String {
-        val root = PolicyNode("Policy resolver root")
-        Parser().parse(root, File("E:\\dev\\alfa-visualizations\\resources\\PolicyGpms.xml"))
-        Parser().parse(root, File("E:\\dev\\alfa-visualizations\\resources\\PolicyArma.xml"))
-        val desicions = LinkedHashMap<String, Desicion>(
-                mapOf(
-                        "Arma-PolicySet1" to Desicion.ALLOW,
-                        "Arma-PolicySet2" to Desicion.ALLOW,
-                        "Arma-Proposal-Rules2" to Desicion.ALLOW
-                )
-        )
-        applyDesicions(root, desicions)
-        val mapper = ObjectMapper()
-
-        return mapper.writeValueAsString(root)
+    internal fun home(@RequestParam("fromDate") fromDate: String, @RequestParam("toDate") toDate: String): String {
+        val decisionsMap = ClickhouseClient.getDecisions("myUser", "Support",
+                DateTime.parse(fromDate),
+                DateTime.parse(toDate)
+        ).map { buildDecisionsMap(it.rootPolicy, it.desicions) }
+        return ObjectMapper().writeValueAsString(decisionsMap)
     }
 
-    private fun applyDesicions(root: PolicyNode, desicions: LinkedHashMap<String, Desicion>) {
+    private fun buildDecisionsMap(rootPolicy: String, desicions: Map<String, Desicion>) : PolicyNode {
+        return applyDesicions(Parser.parse(ClickhouseClient.getPolicy(rootPolicy, "1").byteInputStream()), desicions)
+    }
+
+    private fun applyDesicions(root: PolicyNode, desicions: Map<String, Desicion>) : PolicyNode {
         var child = root
-        root.decision = desicions.entries.first().value
-        for (current in desicions){
+        root.decision = desicions.entries.reversed().first().value
+        val iterator = desicions.entries.reversed().iterator()
+        var backtrack = false;
+        var current: Map.Entry<String, Desicion>? = iterator.next() // first decision is applied
+        while (iterator.hasNext()) {
+            if (!backtrack) {
+                current = iterator.next()
+            }
+            backtrack = false
             val policy = child.children.find {
-                it.id == current.key
+                it.id == current!!.key
             }
-            if (policy == null){
-                throw IllegalArgumentException("Policy not found: $current, from $child" )
+            if (policy == null) {
+                // backtrack upwards
+                backtrack = true
+                child = child.parent ?: throw IllegalStateException("Backtracked up to root")
+            } else {
+                policy.decision = current!!.value
+                child = policy
+
             }
-            policy.decision = current.value
-            child = policy
         }
+        return root
     }
 
     @RequestMapping("/html")
-    @ResponseBody
     internal fun html(): String {
-        val encoded = Files.readAllBytes(Paths.get("E:\\dev\\alfa-visualizations\\resources\\index.html"))
-        return String(encoded, UTF_8)
+        return "index.html"
     }
 }
