@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 @EnableAutoConfiguration
 class JsonController {
 
-    @RequestMapping("/")
+    @RequestMapping("/decisions")
     @ResponseBody
     internal fun home(@RequestParam("fromDate") fromDate: String, @RequestParam("toDate") toDate: String): String {
         val decisionsMap = ClickhouseClient.getDecisions("myUser", "Support",
