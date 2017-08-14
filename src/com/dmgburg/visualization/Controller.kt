@@ -17,15 +17,25 @@ class JsonController {
         val decisionsMap = ClickhouseClient.getDecisions("myUser", "Support",
                 DateTime.parse(decisionsRequest.fromDate),
                 DateTime.parse(decisionsRequest.toDate)
-        ).map { buildDecisionsMap(it.rootPolicy, it.desicions) }
+        ).map { buildDecisionsMap(it.rootPolicy, "1", it.desicions) }
         return ObjectMapper().writeValueAsString(decisionsMap)
     }
 
-    private fun buildDecisionsMap(rootPolicy: String, desicions: Map<String, Desicion>) : PolicyNode {
-        return applyDesicions(Parser.parse(ClickhouseClient.getPolicy(rootPolicy, "1").byteInputStream()), desicions)
+    @RequestMapping("/policy")
+    @ResponseBody
+    internal fun home(@RequestParam name: String, @RequestParam version: String): String {
+        val decisionsMap = buildDecisionsMap(name, version, emptyMap())
+        return ObjectMapper().writeValueAsString(decisionsMap)
+    }
+
+    private fun buildDecisionsMap(rootPolicy: String, version: String, desicions: Map<String, Desicion>) : PolicyNode {
+        return applyDesicions(Parser.parse(ClickhouseClient.getPolicy(rootPolicy, version).byteInputStream()), desicions)
     }
 
     private fun applyDesicions(root: PolicyNode, desicions: Map<String, Desicion>) : PolicyNode {
+        if (desicions.isEmpty()){
+            return root
+        }
         var child = root
         root.decision = desicions.entries.reversed().first().value
         val iterator = desicions.entries.reversed().iterator()
