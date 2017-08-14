@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { ChartComponent } from './chart/chart.component';
 import {HttpModule} from '@angular/http';
-import {ChecksService} from './checks/checks.service';
+import {PolicyService} from './checks/policy.service';
 import { AttributesComponent } from './attributes/attributes.component';
 import {FormsModule} from '@angular/forms';
 
@@ -15,7 +15,7 @@ import {FormsModule} from '@angular/forms';
     AttributesComponent
   ],
   imports: [BrowserModule, HttpModule, FormsModule],
-  providers: [HttpModule, ChecksService],
+  providers: [HttpModule, PolicyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

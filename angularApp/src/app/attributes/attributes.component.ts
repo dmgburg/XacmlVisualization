@@ -1,3 +1,4 @@
+import {Component, OnInit, Output} from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import {Attribute} from './attribute';
 
@@ -7,6 +8,11 @@ import {Attribute} from './attribute';
   styleUrls: ['./attributes.component.css']
 })
 export class AttributesComponent implements OnInit {
+  @Output() treeData;
+  policyName: String;
+  policyVersion: String;
+  constructor() { }
+
   private attributes: Attribute[];
   ATTRIBUTES: Attribute[] = [
     { name: 'Mr. Nice', value: 'myValue' },
