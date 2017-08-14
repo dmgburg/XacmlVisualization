@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as d3 from 'd3';
-import {ChecksService} from '../checks/checks.service';
+import {PolicyService} from '../checks/policy.service';
 
 @Component({
   selector: 'app-chart',
@@ -17,12 +17,13 @@ export class ChartComponent implements OnInit {
   private nodeVerticalMargin = this.nodeWidth * (this.separation - 0.5);
   private margin = {top: 20, right: 40, bottom: 20, left: 40};
 
-  constructor(private checks: ChecksService) {
+  constructor(private policyService: PolicyService) {
   }
 
   ngOnInit() {
-    const treeData = this.checks.getDecisions(new Date(2017, 6, 30, 1, 20, 0, 0), new Date(2017, 6, 30, 4, 20, 0, 0))
-      .then(treeDate => this.drawChart(treeData));
+    // const treeData = this.policyService.getDecisions(new Date(2017, 6, 30, 1, 20, 0, 0), new Date(2017, 6, 30, 4, 20, 0, 0))
+    //   .then(treeDate => this.drawChart(treeData));
+    this.policyService.getPolicy('PolicyArma', '1').then(treeData => this.drawChart(treeData));
   }
 
   drawChart(treeData) {
