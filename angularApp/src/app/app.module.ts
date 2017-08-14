@@ -5,13 +5,16 @@ import { AppComponent } from './app.component';
 import { ChartComponent } from './chart/chart.component';
 import {HttpModule} from '@angular/http';
 import {ChecksService} from './checks/checks.service';
+import { AttributesComponent } from './attributes/attributes.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChartComponent
+    ChartComponent,
+    AttributesComponent
   ],
-  imports: [BrowserModule, HttpModule],
+  imports: [BrowserModule, HttpModule, FormsModule],
   providers: [HttpModule, ChecksService],
   bootstrap: [AppComponent]
 })

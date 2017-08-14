@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.joda.time.DateTime
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 
 @Controller
 @CrossOrigin(origins = arrayOf("*"))
@@ -16,10 +13,10 @@ class JsonController {
 
     @RequestMapping("/decisions")
     @ResponseBody
-    internal fun home(@RequestParam("fromDate") fromDate: String, @RequestParam("toDate") toDate: String): String {
+    internal fun home(@RequestBody decisionsRequest: DecisionsRequest): String {
         val decisionsMap = ClickhouseClient.getDecisions("myUser", "Support",
-                DateTime.parse(fromDate),
-                DateTime.parse(toDate)
+                DateTime.parse(decisionsRequest.fromDate),
+                DateTime.parse(decisionsRequest.toDate)
         ).map { buildDecisionsMap(it.rootPolicy, it.desicions) }
         return ObjectMapper().writeValueAsString(decisionsMap)
     }

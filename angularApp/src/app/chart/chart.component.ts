@@ -1,7 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as d3 from 'd3';
-import * as d3hierarchy from 'd3-hierarchy';
-import {log} from 'util';
 import {ChecksService} from '../checks/checks.service';
 
 @Component({
@@ -23,10 +21,8 @@ export class ChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.checks.getDecisions(new Date(2017, 6, 30, 1, 20, 0, 0), new Date(2017, 6, 30, 4, 20, 0, 0));    const thisObj = this;
-    d3.json('http://localhost:8080/', function (treeData) {
-      thisObj.drawChart(treeData);
-    });
+    const treeData = this.checks.getDecisions(new Date(2017, 6, 30, 1, 20, 0, 0), new Date(2017, 6, 30, 4, 20, 0, 0))
+      .then(treeDate => this.drawChart(treeData));
   }
 
   drawChart(treeData) {
