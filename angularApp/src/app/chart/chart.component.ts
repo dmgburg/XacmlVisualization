@@ -11,7 +11,12 @@ import {PolicyNode} from "../policy-node";
 })
 export class ChartComponent implements OnInit {
   @ViewChild('chart') private chartContainer: ElementRef;
-  @Input() treeData: PolicyNode;
+  private _treeData: PolicyNode;
+  @Input("treeData") set treeData(treeData: PolicyNode) {
+    this._treeData = treeData;
+    this.drawChart(treeData);
+    console.info("New tree data in chart")
+  }
   private nodeHeight = 200;
   private nodeWidth = 300;
   private separation = 1.1;
@@ -23,19 +28,13 @@ export class ChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    // const treeData = this.policyService.getDecisions(new Date(2017, 6, 30, 1, 20, 0, 0), new Date(2017, 6, 30, 4, 20, 0, 0))
-    //   .then(treeDate => this.drawChart(treeData));
-    this.policyService.getPolicy('PolicyArma', '1').then(treeData => {
-      this.treeData = treeData;
-      this.drawChart();
-    });
   }
 
-  drawChart() {
-    console.log(this.treeData);
+  drawChart(treeData: PolicyNode) {
+    console.log(treeData);
     const element = this.chartContainer.nativeElement;
 
-    const hierarchy = d3.hierarchy(this.treeData);
+    const hierarchy = d3.hierarchy(treeData);
     const treeVerticalSize = hierarchy.height + 1;
     const treeHorizontalSize = hierarchy.leaves().length;
     const width = (this.nodeWidth + this.nodeHorizontalMargin) * treeHorizontalSize;
@@ -46,6 +45,8 @@ export class ChartComponent implements OnInit {
     const tree = d3.tree()
       .nodeSize([this.nodeWidth, this.nodeHeight + this.nodeVerticalMargin])
       .separation((a, b) => this.separation);
+
+    body.selectAll("svg").remove();
 
     const svg = body.append('svg')
       .attr('width', width + this.margin.right + this.margin.left)

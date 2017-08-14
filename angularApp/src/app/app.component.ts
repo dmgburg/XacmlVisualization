@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {PolicyNode} from "./policy-node";
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Abacus policy visualizer';
-  public selectedPolicy;
+  public treeData: PolicyNode;
+
+  onTreeDataSet(treeData: PolicyNode){
+    console.info('Tree data consumed: ' + treeData);
+    this.treeData = treeData
+  }
 }

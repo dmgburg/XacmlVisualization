@@ -1,2 +1,2 @@
-<app-attributes ></app-attributes>
-<app-chart [treeData]="selectedPolicy"></app-chart>
+<app-attributes (onTreeData)="onTreeDataSet($event)"></app-attributes>
+<app-chart [treeData]="treeData"></app-chart>

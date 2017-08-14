@@ -58,6 +58,9 @@
         <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
+                <directory>resources</directory>
+            </resource>
+            <resource>
                 <directory>angularApp/dist</directory>
                 <targetPath>static</targetPath>
             </resource>

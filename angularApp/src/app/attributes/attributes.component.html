@@ -1,10 +1,10 @@
-<div><input value="{{policyName}}" title="Policy name"> <input value="{{policyVersion}}" title="Policy version"></div>
-<li *ngFor="let attribute of attributes" (click)="onSelect(attribute)">
+<li *ngFor="let attribute of attributes">
   <select [(ngModel)]="attribute.name" placeholder="name">
     <option *ngFor="let attr of missingAttributes()">{{attr}}</option>
   </select>
-  <input [(ngModel)]="attribute.name" placeholder="name">
+  <!--<input [(ngModel)]="attribute.name" placeholder="name">-->
   <input [(ngModel)]="attribute.value" placeholder="value">
   <button style="color: red" (click)="remove(attribute.name)">X</button>
 </li>
 <button (click)="addAttribute()"> + </button>
+<button (click)="getPolicy()">Find policy</button>
