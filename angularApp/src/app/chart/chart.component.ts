@@ -1,6 +1,7 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as d3 from 'd3';
 import {PolicyService} from '../checks/policy.service';
+import {PolicyNode} from "../policy-node";
 
 @Component({
   selector: 'app-chart',
@@ -10,6 +11,7 @@ import {PolicyService} from '../checks/policy.service';
 })
 export class ChartComponent implements OnInit {
   @ViewChild('chart') private chartContainer: ElementRef;
+  @Input() treeData: PolicyNode;
   private nodeHeight = 200;
   private nodeWidth = 300;
   private separation = 1.1;
@@ -23,14 +25,17 @@ export class ChartComponent implements OnInit {
   ngOnInit() {
     // const treeData = this.policyService.getDecisions(new Date(2017, 6, 30, 1, 20, 0, 0), new Date(2017, 6, 30, 4, 20, 0, 0))
     //   .then(treeDate => this.drawChart(treeData));
-    this.policyService.getPolicy('PolicyArma', '1').then(treeData => this.drawChart(treeData));
+    this.policyService.getPolicy('PolicyArma', '1').then(treeData => {
+      this.treeData = treeData;
+      this.drawChart();
+    });
   }
 
-  drawChart(treeData) {
-    console.log(treeData);
+  drawChart() {
+    console.log(this.treeData);
     const element = this.chartContainer.nativeElement;
 
-    const hierarchy = d3.hierarchy(treeData);
+    const hierarchy = d3.hierarchy(this.treeData);
     const treeVerticalSize = hierarchy.height + 1;
     const treeHorizontalSize = hierarchy.leaves().length;
     const width = (this.nodeWidth + this.nodeHorizontalMargin) * treeHorizontalSize;

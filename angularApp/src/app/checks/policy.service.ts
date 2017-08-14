@@ -11,14 +11,14 @@ export class PolicyService {
   constructor(private http: Http) {
   }
 
-  getDecisions(fromDate: Date, toDate: Date): Promise<PolicyNode[]> {
+  getDecisions(fromDate: Date, toDate: Date): Promise<PolicyNode> {
     return this.http.get(`${this.baseUrl}/decisions?fromDate=${fromDate.toISOString()}&toDate=${toDate.toISOString()}`)
       .toPromise()
       .then(responce => responce.json() as PolicyNode[])
       .catch(this.handleError);
   }
 
-  getPolicy(name: String, version: String): Promise<PolicyNode[]> {
+  getPolicy(name: String, version: String): Promise<PolicyNode> {
     return this.http.get(`${this.baseUrl}/policy?name=${name}&version=${version}`)
       .toPromise()
       .then(response => {

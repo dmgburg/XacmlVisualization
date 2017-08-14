@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-attributes',
@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./attributes.component.css']
 })
 export class AttributesComponent implements OnInit {
-
+  @Output() treeData;
+  policyName: String;
+  policyVersion: String;
   constructor() { }
 
   ngOnInit() {
