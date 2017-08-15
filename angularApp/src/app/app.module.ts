@@ -7,6 +7,7 @@ import {HttpModule} from '@angular/http';
 import {PolicyService} from './checks/policy.service';
 import { AttributesComponent } from './attributes/attributes.component';
 import {FormsModule} from '@angular/forms';
+import {AlertModule} from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import {FormsModule} from '@angular/forms';
     ChartComponent,
     AttributesComponent
   ],
-  imports: [BrowserModule, HttpModule, FormsModule],
+  imports: [BrowserModule, HttpModule, FormsModule, AlertModule.forRoot()],
   providers: [HttpModule, PolicyService],
   bootstrap: [AppComponent]
 })
