@@ -41,6 +41,10 @@ export class AttributesComponent implements OnInit {
     this.attributes = this.ATTRIBUTES;
   }
 
+  setAttributeName(id: number, name: String){
+    this.attributes[id].name = name;
+  }
+
   getPolicy(){
     this.policyService.getPolicy(this.findAttribute(this.POLICY_NAME), this.findAttribute(this.POLICY_VERSION))
       .then(data => {
@@ -53,7 +57,7 @@ export class AttributesComponent implements OnInit {
     this.attributes.push(new Attribute());
   }
 
-  missingAttributes(): String[]{
+    missingAttributes(): String[]{
     return this.ATTRIBUTE_NAMES.filter(attrName => this.ATTRIBUTES.find(it => it.name !== attrName))
   }
 

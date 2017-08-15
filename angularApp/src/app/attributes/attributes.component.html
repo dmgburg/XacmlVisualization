@@ -1,17 +1,24 @@
-  <div *ngFor="let attribute of attributes" class="row">
-  <span class="col">
-    <select [(ngModel)]="attribute.name" placeholder="name">
-      <option *ngFor="let attr of missingAttributes()">{{attr}}</option>
-    </select>
+<div class="container">
+  <div *ngFor="let attribute of attributes; let attributeIdx = index" class="row">
+  <span class="col-lg-2 mr-0 ml-0" dropdown>
+    <button dropdownToggle type="button" class="btn btn-primary btn-block dropdown-toggle">
+      {{attribute.name}}<span class="caret"></span>
+    </button>
+    <ul *dropdownMenu class="dropdown-menu" role="menu">
+      <li *ngFor="let attr of missingAttributes()" role="menuitem">
+        <a class="btn btn-light dropdown-item" (click)="setAttributeName(attributeIdx, attr)">{{attr}}</a>
+      </li>
+    </ul>
   </span>
-    <span class="col"><input [(ngModel)]="attribute.value" placeholder="value"></span>
-    <span class="col">
-    <button style="color: red" (click)="remove(attribute.name)">X</button>
-  </span>
+    <span class="col-lg-9"><input [(ngModel)]="attribute.value"
+                             placeholder="value"
+                             class="form-control"
+                             id="exampleInputEmail1"
+                             aria-describedby="emailHelp"></span>
+    <!--<span class="col-lg-1"><button type="button" class="btn btn-block btn-primary" (click)="remove(attribute.name)">X</button></span>-->
   </div>
+  <!--<div class="row"><button (click)="addAttribute()" type="button" class="btn  btn-primary"> +</button></div>-->
   <div class="row">
-    <button (click)="addAttribute()"> +</button>
+    <span class="col-lg-offset-4 col-lg-4"><button (click)="getPolicy()" type="button" class="btn btn-block btn-primary">Find policy</button></span>
   </div>
-  <div class="row">
-    <button (click)="getPolicy()" class="row">Find policy</button>
-  </div>
+</div>
